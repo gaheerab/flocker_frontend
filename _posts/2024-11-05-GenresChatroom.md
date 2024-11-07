@@ -122,12 +122,12 @@ comments: true
 
             <label for="channel">Channel:</label>
             <select id="channel">
-                <option value="The Weeknd or Lana Del Rey">The Weeknd or Lana Del Rey</option>
-                <option value="The Rolling stones or Guns N' Roses">The Rolling stones or Guns N' Roses</option>
-                <option value="Ella Fitzgerald or Billie Holiday">Ella Fitzgerald or Billie Holiday</option>
-                <option value="Calvin Harris or Alan Walker">Calvin Harris or Alan Walker</option>
-                <option value="Drake or Kanye West">Drake or Kanye West</option>
-                <option value="Mozart or Beethoven">Mozart or Beethoven</option>
+                <option value="The Weeknd OR Lana Del Rey">The Weeknd or Lana Del Rey</option>
+                <option value="RHCP OR Guns N' Roses">RHCP or Guns N' Roses</option>
+                <option value="Ella Fitzgerald OR Billie Holiday">Ella Fitzgerald or Billie Holiday</option>
+                <option value="Calvin Harris OR Alan Walker">Calvin Harris or Alan Walker</option>
+                <option value="Drake OR Kanye West">Drake or Kanye West</option>
+                <option value="Mozart OR Beethoven">Mozart or Beethoven</option>
             </select>
 
             <button class="button" onclick="loadPosts()">Select</button>
@@ -164,31 +164,51 @@ comments: true
 
         // Function to add a new post
         function addPost() {
+
+            const channel = document.getElementById("channel").value;
+
+            let channel_id = 17
+
+            if (channel === "The Weeknd OR Lana Del Rey") {
+                let channel_id = 17
+            } else if (channel === "RHCP OR Guns N Roses") {
+                let channel_id = 19
+            } else if (channel === "Ella Fitzgerald OR Billie Holiday") {
+                let channel_id = 20
+            } else if (channel === "Drake OR Kanye West") {
+                let channel_id = 21
+            } else if (channel === "Mozart OR Bethoven") {
+                let channel_id = 22
+            }
+
             const title = titleInput.value.trim();
             const comment = commentInput.value.trim();
-            const group = groupSelect.value;
-            const channel = channelSelect.value;
 
             if (title === '' || comment === '') {
                 alert("Please enter both a title and a comment.");
-                return;
             }
 
-            const newPost = {
-                title: title,
-                comment: comment,
-                timestamp: new Date().toLocaleString(),
-                likes: 0,
-                likedByUser: false, // Track if the post has been liked by the current user
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Cookie", "jwt_python_flask=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfdWlkIjoibmlrbyJ9.q7FKOl0eGTDRhPKYBAROAP9FB3kv_wHzZatcAxihso4");
+
+            const raw = JSON.stringify({
+                "title": title,
+                "comment": title,
+                "channel_id": channel_id
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
             };
 
-            // Initialize group and channel if not already present
-            if (!posts[group]) posts[group] = {};
-            if (!posts[group][channel]) posts[group][channel] = [];
-
-            // Add the new post to the appropriate group and channel
-            posts[group][channel].push(newPost);
-            localStorage.setItem('chatPosts', JSON.stringify(posts));
+            fetch("http://127.0.0.1:8887/api/post", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
 
             // Clear the input fields
             titleInput.value = '';
