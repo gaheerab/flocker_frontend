@@ -1,6 +1,7 @@
 ---
 toc: true
 layout: post
+description: Select A Channel and Start Discussing!
 title: Voting Chatroom
 permalink: /chatroom
 comments: true
