@@ -190,7 +190,7 @@ comments: true
                 <span>Electronic</span>
             </div>
         </div>
-        <a href="/flocker_frontend/chatroom" class="chatroom-button" id="chatroom-button">Go to Chatroom</a>  
+        <a href="/flocker_frontend/chatroom-genre" class="chatroom-button" id="chatroom-button">Go to Chatroom</a>  
     </div>
 
     <script>
