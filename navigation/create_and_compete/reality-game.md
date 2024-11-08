@@ -6,18 +6,51 @@ permalink: /create_and_compete/reality_game
 author: Yash, Nikhil, Rohan, Neil
 ---
 
+<div class="sidebar">
+    <a href="/flocker_frontend/create_and_compete/realityroom-home" class="sidebar-btn">🏠 Home</a>
+    <a href="/flocker_frontend/create_and_compete/reality_game" class="sidebar-btn">🎮 Game</a>
+    <a href="/flocker_frontend/create_and_compete/reality-room-about" class="sidebar-btn">❓ About</a>
+    <a href="/flocker_frontend/create_and_compete/reality-room-terms" class="sidebar-btn">📄 Terms</a>
+</div>
 
+<style>
+    body {
+        background-image: url("../../images/background9674.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
 
-<table class="sub-menu">
-    <tr>
-        <td>
-            <label class="switch">
-                <input type="checkbox" id="toggle-switch" onclick="toggleRedirect()">
-                <span class="slider round"></span>
-            </label>
-        </td>
-    </tr>
-</table>
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 150px;
+        height: 100%;
+        background-color: #121212 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        color: white;
+        border-right: 1px solid gray;
+    }
+    .sidebar-btn {
+        background-color: #121212;
+        color: white !important;
+        border: 2px solid gray;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 16px;
+        width: 120px;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+    }
+</style>
 
 <div id="main-content">
     <div id="chatPanel">
@@ -29,7 +62,26 @@ author: Yash, Nikhil, Rohan, Neil
             <input placeholder="Enter message to send:" type="text" id="messageBox" name="message">
         </form>
     </div>
+    <!-- Instructions Frame with Buttons Below -->
+    <div class="instructions-frame">
+        <div class="instructions-box">
+            <h3>Game Instructions</h3>
+            <p>Welcome to the Reality Room Game! Here are the instructions to get you started:</p>
+            <ul>
+                <li>Use the chat to interact with the AI.</li>
+                <li>Try to figure out if you're chatting with a human or an AI!</li>
+                <li>Submit your guess at the end of the game.</li>
+                <li>Have fun and see if you can outsmart the AI!</li>
+            </ul>
+        </div>
+        <!-- Options: Human or AI (Now Outside of the White Box) -->
+        <div class="guess-options">
+            <button class="guess-button" onclick="submitGuess('human')">Human</button>
+            <button class="guess-button" onclick="submitGuess('ai')">AI</button>
+        </div>
+    </div>
 </div>
+
 
 <style>
     table, th, td {
@@ -90,6 +142,15 @@ author: Yash, Nikhil, Rohan, Neil
         max-width: 80%;
         word-wrap: break-word;
     }
+    .ai-bubble {
+        background-color: #e0e0e0;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px 0;
+        max-width: 80%;
+        word-wrap: break-word;
+        color: #333;
+    }
     .cell {
         display: flex;
     }
@@ -113,6 +174,70 @@ author: Yash, Nikhil, Rohan, Neil
     }
     input[type="file"] {
         display: none;
+    }
+    /* Instructions Box */
+    .instructions-box {
+        width: 250px;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+        color: #333;
+        height: 430px; /* Adjust this value as needed */
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-between; */
+    }
+
+    .instructions-box h3 {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .instructions-box p, .instructions-box ul {
+        font-size: 0.9em;
+        color: #333;
+    }
+    
+    .instructions-box ul {
+        padding-left: 20px;
+    }
+
+    .guess-options {
+        display: flex;
+        gap: 0; /* Remove gap between buttons */
+        margin-top: 10px;
+        padding-top: 10px;
+        width: 100%; /* Make the container fill the full width */
+    }
+
+    .guess-button {
+        flex: 1;
+        padding: 8px 0;
+        background-color: #007bff !important;
+        color: white !important;
+        border: none;
+        border-radius: 0;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: background-color 0.3s ease !important;
+    }
+
+    .guess-button:first-child {
+        border-radius: 6px 0 0 6px;
+    }
+
+    .guess-button:last-child {
+        border-radius: 0 6px 6px 0;
+    }
+
+    .guess-button:hover {
+        background-color: #0056b3 !important;
+    }
+
+    .guess-button:active {
+        background-color: #003f7f !important;
     }
 </style>
 
@@ -198,95 +323,73 @@ author: Yash, Nikhil, Rohan, Neil
 </style>
 
 <script>
-    // chat functionality
-    document.getElementById('messageBox').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault() // prevent page refresh
-            var inputValue = event.target.value; // get da content of the message
-            var messageContent = inputValue;
-            const fileInput = document.getElementById('file-input');
-            const file = fileInput.files[0];
-
-            const apiUrl = `https://api.api-ninjas.com/v1/profanityfilter?text=${encodeURIComponent(inputValue)}`;
-
-            fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'X-Api-Key': 'uZQcFwYU/4Ttvkv9wmSYpQ==ERhuZfToEn2rmGWJ'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error(`Error: ${response.status}`);
-                }
-            })
-            .then(data => {
-                if (data.has_profanity) {
-                    console.log('Profanity detected!');
-                    console.log('Censored message:', data.censored);
-
-                    messageContent = data.censored;
-                } else {
-                    console.log('No profanity');
-                }
-
-                var paragraph = document.createElement('p');
-                paragraph.textContent = messageContent;
-                paragraph.classList.add('message-bubble');
-                document.getElementById('outputDiv').appendChild(paragraph);
-                event.target.value = ''; // clear box
-
-                const messagesDiv = document.getElementById('outputDiv');
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-                const boomSound = new Audio('../images/boom.mp3');
-                if (messageContent.toLowerCase() === 'boom') {
-                    boomSound.play();
-                    document.body.classList.add('flash');
-                    setTimeout(() => {
-                        document.body.classList.remove('flash');
-                    }, 500); // Remove the flash effect after 0.5s
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        }
-    });
-</script>
-
-<script>
-    async function fetchPosts() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('postId');
-        console.log(postId)
-        console.log("test")
+    // Function to send message to Gemini API and display response
+    async function sendToGeminiAPI(userMessage) {
+        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBOUekV-txUye0_jpkGlfRe3PMk7Q9GHic";
 
         try {
-            const response = await fetch(`${pythonURI}/api/post`, fetchOptions);
-            if (!response.ok) {
-                throw new Error('Failed to fetch groups: ' + response.statusText);
-            }
-            const posts = await response.json();
-            console.log(posts)
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: `You are pretending to be a human as a part of a game, respond like one to this message. Use incorrect punctuation sometimes, acronyms, slang, etc. Minimal emojis and if user asks content question that is above 10th grade level explain that you don't know. Pretend to be male. ${userMessage}` }]
+                    }]
+                })
+            });
 
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text; // Adjusted to match Postman response structure
         } catch (error) {
-            console.error('Error fetching groups:', error);
+            console.error('Error communicating with Gemini API:', error);
+            return "An error occurred while communicating with the AI.";
         }
     }
-    fetchPosts();
 
-    // file upload functionality
+    // Chat functionality
+    document.getElementById('messageBox').addEventListener('keypress', async function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent page refresh
+        const userMessage = event.target.value;
+
+        // Display user message in chat
+        const userMessageElement = document.createElement('p');
+        userMessageElement.classList.add('message-bubble');
+        userMessageElement.textContent = userMessage;
+        document.getElementById('outputDiv').appendChild(userMessageElement);
+
+        event.target.value = ''; // Clear input box
+
+        // Get response from Gemini API
+        const aiResponse = await sendToGeminiAPI(userMessage);
+
+        // Display AI response in chat
+        const aiMessageElement = document.createElement('p');
+        aiMessageElement.classList.add('ai-bubble');
+        aiMessageElement.textContent = aiResponse;
+        document.getElementById('outputDiv').appendChild(aiMessageElement);
+
+        // Scroll to the bottom of the chat
+        const messagesDiv = document.getElementById('outputDiv');
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    });
+
+    // Additional existing JavaScript code (e.g., file upload, redirect toggle)
     function triggerFileUpload() {
-        document.getElementById('file-input').click();
+    document.getElementById('file-input').click();
     }
 
     function toggleRedirect() {
-        const checkbox = document.getElementById('toggle-switch');
-        if (checkbox.checked) {
-            window.location.href = '{{site.baseurl}}/create_and_compete/realityroom';
-        }
+    const checkbox = document.getElementById('toggle-switch');
+    if (checkbox.checked) {
+        window.location.href = '{{site.baseurl}}/create_and_compete/realityroom';
+    }
     }
 </script>
