@@ -215,6 +215,12 @@ author: Ryan, Jowan, Gabriela, Michelle
     <img src="https://thatdeliciousdish.com/wp-content/uploads/2020/07/Garlic-Mushroom-Noodles-Recipe-web1-1-800x840.jpg" alt="Ramen">
 </div>
 
+<div class="image-row">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWAt_iSo2fSLH7dyuHxy4y-wsdsJ5dvH3FfQ&s" alt="Image 1">
+    <img src="https://www.theglowwellness.com/wp-content/uploads/2022/03/208e6e4a-8cb0-1aca-65b2-29883634b00a-1080x1080.jpg" alt="Image 2">
+    <img src="https://images-prod.healthline.com/hlcmsresource/images/AN_images/benefits-of-yerba-mate-1296x728-feature.jpg" alt="Image 3">
+</div>
+
 <div class="chat-container">
     <div class="chat-label">Chat Box</div>
     <div class="chat-box" id="chatBox">
@@ -251,11 +257,6 @@ author: Ryan, Jowan, Gabriela, Michelle
     </li>
 </ul>
 
-<div class="image-row">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWAt_iSo2fSLH7dyuHxy4y-wsdsJ5dvH3FfQ&s" alt="Image 1">
-    <img src="https://www.theglowwellness.com/wp-content/uploads/2022/03/208e6e4a-8cb0-1aca-65b2-29883634b00a-1080x1080.jpg" alt="Image 2">
-    <img src="https://images-prod.healthline.com/hlcmsresource/images/AN_images/benefits-of-yerba-mate-1296x728-feature.jpg" alt="Image 3">
-</div>
 
 <script>
     async function fetchMessages() {
@@ -317,5 +318,111 @@ author: Ryan, Jowan, Gabriela, Michelle
         });
     }
 </script>
+
+</html>
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Chat</title>
+  
+  <!-- Link to Google Fonts for Comfortaa font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap">
+  
+  <style>
+    body { 
+      font-family: 'Comfortaa', sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      background-color: #fafafa;
+    }
+    #chat-container { 
+      width: 400px; 
+      border: 2px solid #FFECB3; /* Pale yellow border */
+      padding: 20px; 
+      border-radius: 10px;
+      background-color: #ffffff;
+    }
+    #chat-container h2 {
+      color: black; /* Changed title color to black */
+    }
+    #messages { 
+      height: 300px; 
+      overflow-y: scroll; 
+      border: 1px solid #FFECB3; /* Pale yellow border */
+      padding: 10px; 
+      margin-bottom: 10px; 
+      border-radius: 5px;
+      background-color: #fff8e1;
+    }
+    .message { 
+      margin-bottom: 10px; 
+      padding: 5px; 
+      background: #fff8e1; /* Light yellow background */
+      border-radius: 8px; 
+      color: black; /* Message text color set to black */
+    }
+    .user { 
+      font-weight: bold; 
+      color: #333; 
+    }
+  </style>
+</head>
+<body>
+
+<div id="chat-container">
+  <h2>Food Chat Box</h2>
+
+  <div id="messages"></div>
+
+  <form id="chat-form">
+    <input type="text" id="username" placeholder="Your name" required style="width: 100%; margin-bottom: 5px;">
+    <textarea id="message" placeholder="Type a message" required style="width: 100%; height: 50px; margin-bottom: 5px;"></textarea>
+    <input type="file" id="image" accept="image/*" style="width: 100%; margin-bottom: 5px;">
+    <button type="submit" style="width: 100%;">Send</button>
+  </form>
+</div>
+
+<script>
+  const messagesContainer = document.getElementById('messages');
+  const chatForm = document.getElementById('chat-form');
+
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const message = document.getElementById('message').value;
+    const imageFile = document.getElementById('image').files[0];
+
+    // Create the message element
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `<span class="user">${username}:</span> ${message}`;
+
+    // Add image if uploaded
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.style.maxWidth = '100%';
+        img.style.marginTop = '5px';
+        messageElement.appendChild(img);
+      };
+      reader.readAsDataURL(imageFile);
+    }
+
+    // Add the message element to messages container
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Auto-scroll to latest message
+
+    // Clear form inputs
+    chatForm.reset();
+  });
+</script>
+
 </body>
 </html>

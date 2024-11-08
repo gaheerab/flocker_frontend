@@ -73,15 +73,17 @@ author: Yash, Nikhil, Rohan, Neil
                 <li>Submit your guess at the end of the game.</li>
                 <li>Have fun and see if you can outsmart the AI!</li>
             </ul>
+            <p id="score">Score:</p>
         </div>
-        <!-- Options: Human or AI (Now Outside of the White Box) -->
+    </div>
+    <div id="guessPrompt" style="display: none;">
+        <p class="modal-text">Who do you think you've been chatting with? Choose one:</p>
         <div class="guess-options">
             <button class="guess-button" onclick="submitGuess('human')">Human</button>
             <button class="guess-button" onclick="submitGuess('ai')">AI</button>
         </div>
     </div>
 </div>
-
 
 <style>
     table, th, td {
@@ -206,10 +208,10 @@ author: Yash, Nikhil, Rohan, Neil
 
     .guess-options {
         display: flex;
-        gap: 0; /* Remove gap between buttons */
+        gap: 0;
         margin-top: 10px;
         padding-top: 10px;
-        width: 100%; /* Make the container fill the full width */
+        width: 100%; 
     }
 
     .guess-button {
@@ -218,18 +220,10 @@ author: Yash, Nikhil, Rohan, Neil
         background-color: #007bff !important;
         color: white !important;
         border: none;
-        border-radius: 0;
+        border-radius: 10;
         font-size: 0.9em;
         cursor: pointer;
         transition: background-color 0.3s ease !important;
-    }
-
-    .guess-button:first-child {
-        border-radius: 6px 0 0 6px;
-    }
-
-    .guess-button:last-child {
-        border-radius: 0 6px 6px 0;
     }
 
     .guess-button:hover {
@@ -259,71 +253,58 @@ author: Yash, Nikhil, Rohan, Neil
         height: 100vh;
         width: 100vw;
     }
-</style>
 
-<style>
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
+    #guessPrompt {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+        color: black;
+        border-radius: 20px;
     }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-    }
-
-    .slider.round {
-        border-radius: 35px;
-    }
-
-    .slider.round:before {
-        border-radius: 50%;
+    .timestamp {
+        font-size: 0.75em;
+        color: #666;
+        margin-left: 10px;
     }
 </style>
 
 <script>
-    // Function to send message to Gemini API and display response
+        // Array of random names and states
+        const names = ["John", "Sarah", "Alex", "Emily", "Michael", "Jessica", "David", "Laura"];
+        const states = ["Iowa", "California", "New York", "Texas", "Florida", "Nevada", "Ohio", "Michigan"];
+
+        // Function to get a random item from an array
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        // Function to display the tricky welcome message
+        function displayTrickyMessage() {
+            const randomName = getRandomItem(names);
+            const randomState = getRandomItem(states);
+            const message = `Loading... You connected to ${randomName} from ${randomState}!`;
+
+            const outputDiv = document.getElementById('outputDiv');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-bubble');
+            messageElement.textContent = message;
+
+            // Append the message to the chat output
+            outputDiv.appendChild(messageElement);
+        }
+
+        // Run the displayTrickyMessage function on page load
+        window.onload = displayTrickyMessage;
+</script>
+
+<script>
     async function sendToGeminiAPI(userMessage) {
         const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBOUekV-txUye0_jpkGlfRe3PMk7Q9GHic";
 
@@ -335,7 +316,7 @@ author: Yash, Nikhil, Rohan, Neil
                 },
                 body: JSON.stringify({
                     contents: [{
-                        parts: [{ text: `You are pretending to be a human as a part of a game, respond like one to this message. Use incorrect punctuation sometimes, acronyms, slang, etc. Minimal emojis and if user asks content question that is above 10th grade level explain that you don't know. Pretend to be male. ${userMessage}` }]
+                        parts: [{ text: `You are pretending to be a human as a part of a game, respond like one to this message. Use incorrect punctuation in sentences, acronyms, slang, etc. No emojis and if user asks content question that is above 10th grade level explain that you don't know. Pretend to be a male. ${userMessage}` }]
                     }]
                 })
             });
@@ -345,45 +326,118 @@ author: Yash, Nikhil, Rohan, Neil
             }
 
             const data = await response.json();
-            return data.candidates[0].content.parts[0].text; // Adjusted to match Postman response structure
+            return data.candidates[0].content.parts[0].text;
         } catch (error) {
             console.error('Error communicating with Gemini API:', error);
             return "An error occurred while communicating with the AI.";
         }
     }
 
+    let messageCount = 0;
+    function incrementMessageCount() {
+        messageCount += 1;
+        if (messageCount === 5) {
+            showGuessPrompt();
+        }
+    }
+
+    let score = 0;
+    const scoreText = document.getElementById('score')
+    function submitGuess(answer) {
+        if (answer === 'ai') {
+            score += 1
+            scoreText.innerHTML = `Score: ${score}`
+            hideGuessPrompt();
+            messageCount = 0;
+            document.getElementById('outputDiv').innerHTML = ' ';
+        } else {
+            score -= 1
+            scoreText.innerHTML = `Score: ${score}`
+            hideGuessPrompt();
+            messageCount = 0;
+            document.getElementById('outputDiv').innerHTML = ' ';
+        }
+    }
+
+    function showGuessPrompt() {
+        document.getElementById('guessPrompt').style.display = 'block';
+    }
+
+    function hideGuessPrompt() {
+        document.getElementById('guessPrompt').style.display = 'none';
+    }
+
+    function getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addMessageToChat(message, isAI = false) {
+        const messageElement = document.createElement('p');
+        messageElement.classList.add(isAI ? 'ai-bubble' : 'message-bubble');
+        messageElement.innerHTML = `${message} <span class="timestamp">${getCurrentTime()}</span>`;
+        document.getElementById('outputDiv').appendChild(messageElement);
+    }
+
     // Chat functionality
     document.getElementById('messageBox').addEventListener('keypress', async function(event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent page refresh
+        event.preventDefault();
         const userMessage = event.target.value;
 
-        // Display user message in chat
-        const userMessageElement = document.createElement('p');
-        userMessageElement.classList.add('message-bubble');
-        userMessageElement.textContent = userMessage;
-        document.getElementById('outputDiv').appendChild(userMessageElement);
+        addMessageToChat(userMessage);
+        event.target.value = '';
+        incrementMessageCount();
 
-        event.target.value = ''; // Clear input box
-
-        // Get response from Gemini API
+        // TODO: Add response delay.
         const aiResponse = await sendToGeminiAPI(userMessage);
 
-        // Display AI response in chat
         const aiMessageElement = document.createElement('p');
         aiMessageElement.classList.add('ai-bubble');
         aiMessageElement.textContent = aiResponse;
         document.getElementById('outputDiv').appendChild(aiMessageElement);
+        incrementMessageCount();
 
-        // Scroll to the bottom of the chat
         const messagesDiv = document.getElementById('outputDiv');
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
     });
 
-    // Additional existing JavaScript code (e.g., file upload, redirect toggle)
     function triggerFileUpload() {
-    document.getElementById('file-input').click();
+        document.getElementById('file-input').click();
+        const file = event.target.files[0];
+        if (file) {
+            displayFileMessage(file);
+        }
+    }
+
+    function displayFileMessage(file) {
+        const outputDiv = document.getElementById('outputDiv');
+
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message-bubble');
+
+        if (file.type.startsWith("image/")) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.alt = file.name;
+            img.style.maxWidth = '200px';
+            img.style.maxHeight = '200px';
+            messageElement.appendChild(img);
+        } else {
+            const fileLink = document.createElement('a');
+            fileLink.href = URL.createObjectURL(file);
+            fileLink.download = file.name;
+            fileLink.textContent = `Uploaded File: ${file.name}`;
+            messageElement.appendChild(fileLink);
+        }
+
+        const timestamp = document.createElement('span');
+        timestamp.classList.add('timestamp');
+        timestamp.textContent = getCurrentTime(); 
+        messageElement.appendChild(timestamp);
+
+        outputDiv.appendChild(messageElement);
     }
 
     function toggleRedirect() {
