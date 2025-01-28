@@ -58,7 +58,7 @@ comments: true
 </div>
 
 <script type="module">
-    // JavaScript to show the popup on load and hide it on button click
+    // JavaScript to show the popup on load and hide the rule button when it clicks
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('rules-popup');
         const acknowledgeButton = document.getElementById('acknowledge-rules');
@@ -96,7 +96,7 @@ comments: true
             padding: 20px;
             background-color: transparent;
         }
-        .vinyl-grid {
+        .vinyl-grid { /* Grid layout for the vinyl items */
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
@@ -126,7 +126,7 @@ comments: true
         .vinyl-item img:hover {
             transform: scale(1.1);
         }
-        .vinyl-item span {
+        .vinyl-item span { /*Text below each vinyl item */
             margin-top: 8px;
             font-size: 16px;
             color: #FFF;

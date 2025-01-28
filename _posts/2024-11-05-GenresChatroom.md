@@ -28,12 +28,12 @@ comments: true
             max-width: 800px;
         }
 
-        h1 {
+         h1 {  <!-- Style for headings  -->
             font-size: 2em;
             margin-bottom: 10px;
         }
 
-        .card {
+        .card { <!-- Style for individual cards (group, post creation, and post feed sections)  -->
             background-color: pink;
             border-radius: 10px;
             padding: 20px;
@@ -41,7 +41,7 @@ comments: true
             margin-right: 200px;
         }
 
-        .card h2 {
+        .card h2 { <!-- Style for card headings -->
             font-size: 1.5em;
             margin-bottom: 10px;
         }
@@ -51,7 +51,7 @@ comments: true
             margin-top: 10px;
         }
 
-        .card select,
+        .card select, <!-- Style for inputs and textareas -->
         .card input[type="text"],
         .card textarea {
             width: 100%;
@@ -73,7 +73,7 @@ comments: true
             margin-top: 10px;
         }
 
-        .post-item {
+        .post-item { <!-- Style for individual posts -->
             background-color: #DE3163;
             border-radius: 10px;
             padding: 15px;
@@ -81,12 +81,12 @@ comments: true
             border: 1px solid #444;
         }
 
-        .post-item h3 {
+        .post-item h3 { <!-- Style for post titles -->
             margin: 0;
             font-size: 1.2em;
         }
 
-        .post-item p {
+        .post-item p {  <!-- Style for post comments -->
             margin: 10px 0;
             color: #ddd;
         }
@@ -121,14 +121,14 @@ comments: true
                 <option value="private">Private</option>
             </select>
 
-            <label for="channel">Channel:</label>
-            <select id="channel">
-                <option value="The Weeknd OR Lana Del Rey">The Weeknd or Lana Del Rey</option>
-                <option value="RHCP OR Guns N' Roses">RHCP or Guns N' Roses</option>
-                <option value="Ella Fitzgerald OR Billie Holiday">Ella Fitzgerald or Billie Holiday</option>
-                <option value="Calvin Harris OR Alan Walker">Calvin Harris or Alan Walker</option>
-                <option value="Drake OR Kanye West">Drake or Kanye West</option>
-                <option value="Mozart OR Beethoven">Mozart or Beethoven</option>
+            <label for="channel">Channel:</label> 
+            <select id="channel">  <!-- Different channel options -->
+                <option value="The Weeknd or Lana Del Rey">The Weeknd or Lana Del Rey</option>
+                <option value="The Rolling stones or Guns N' Roses">The Rolling stones or Guns N' Roses</option>
+                <option value="Ella Fitzgerald or Billie Holiday">Ella Fitzgerald or Billie Holiday</option>
+                <option value="Calvin Harris or Alan Walker">Calvin Harris or Alan Walker</option>
+                <option value="Drake or Kanye West">Drake or Kanye West</option>
+                <option value="Mozart or Beethoven">Mozart or Beethoven</option>
             </select>
 
             <button class="button" onclick="loadPosts()">Select</button>
